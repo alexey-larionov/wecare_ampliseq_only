@@ -1,0 +1,1 @@
+The steps up to reading VCF to R inclusive have been preformed in analysis v04_ampliseq_nfe
