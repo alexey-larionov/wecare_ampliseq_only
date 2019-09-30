@@ -1,0 +1,274 @@
+---
+title: "s01_read_data"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+started: AL09Sep2019  
+last updated: AL09Sep2019  
+
+# Summary  
+
+- Read raw Ampliseq-NFE Rdata from analysis v04  
+- Add phenotypes, as described below (like it was done in analysis v04)  
+- Remove NFE samples from data  
+
+Adding phenotypes:  
+
+- Initially, phenotype data were provided by Xiaolin in e-mail to Marc of 29Aug2018  
+  (used here in file phenotypes_dec2018.txt)  
+- Then, updated data were provided to me by Marc in e-mail of 07Jan2019  
+  (file phenotypes_jan2019.txt, contains data about familial history, X-ray treatment etc)  
+- The script reads both sets and compares them before use  
+- The script syncs phenotype cases IDs with the samples names in sequencing  
+
+Output data: 12,276 vars x 541 Samples (268UBC+273CBC)  
+
+# start_section
+
+<style>
+pre {
+  overflow-x: auto;
+}
+pre code {
+  word-wrap: normal;
+  white-space: pre;
+}
+</style>
+
+```{r set_width, echo=F}
+
+#eval=F
+
+options(width = 999)
+# https://stackoverflow.com/questions/36845178/width-of-r-code-chunk-output-in-rmarkdown-files-knitr-ed-to-html
+
+```
+
+```{r start_section}
+
+Sys.time()
+rm(list=ls())
+graphics.off()
+
+library(knitr)
+library(dplyr)
+
+library(tidyr) # for separate (samples names parsing)
+
+
+base_folder="/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s07_read_data"
+opts_knit$set(root.dir = base_folder)
+
+options(stringsAsFactors = F)
+options(warnPartialMatchArgs = T, 
+        warnPartialMatchAttr = T, 
+        warnPartialMatchDollar = T)
+
+#options(error = browser()) # Type Q or c to exit, drop browser level
+# https://support.rstudio.com/hc/en-us/articles/200713843?version=1.1.456&mode=desktop
+# https://stackoverflow.com/questions/13052522/how-to-leave-the-r-browser-mode-in-the-console-window/13052588 
+
+```
+
+# read_sequencing_data
+
+```{r read_genotypes_variants}
+
+data_folder="/Users/alexey/Documents/wecare/ampliseq/v04_ampliseq_nfe/s06_read_vcf_to_r"
+load(paste(data_folder, "s01_read_vcf_to_r.RData", sep="/"))
+base_folder="/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s07_read_data"
+genotypes.mx <- gt_add.mx
+variants.df <- fixed.df
+rm(data_folder, ad.mx, gt_chr.mx, gt_num.mx,gt_add.mx,fixed.df,meta.df)
+
+```
+
+# read_phenotype_data  
+
+```{r read_phenotypes}
+
+data_folder="/Users/alexey/Documents/wecare/ampliseq/v04_ampliseq_nfe/s05_phenotypes"
+
+# Phenotype data
+phenotypes_2018_file <- paste(data_folder, "phenotypes_dec2018.txt", sep="/")
+phenotypes_2018.df <- read.table(phenotypes_2018_file, header=T, sep="\t", quote="")
+
+phenotypes_2019_file <- paste(data_folder, "phenotypes_jan2019.txt", sep="/")
+phenotypes_2019.df <- read.table(phenotypes_2019_file, header=T, sep="\t", quote="")
+
+# Clean-up
+rm(phenotypes_2018_file, phenotypes_2019_file, data_folder)
+
+```
+
+# Compare phenotypes provided in 2018 and 2019
+
+```{r compare_phenotypes}
+
+# Data sizes
+dim(phenotypes_2018.df)
+dim(phenotypes_2019.df)
+
+# No missed data in both phenotype versions
+sum(is.na(phenotypes_2018.df))
+sum(is.na(phenotypes_2019.df))
+
+# Avaiable annotations
+colnames(phenotypes_2018.df)
+colnames(phenotypes_2019.df)
+
+# All fields of 2018 are present in 2019 and the data is the same
+identical_fields <- colnames(phenotypes_2018.df)
+sum(phenotypes_2018.df[,identical_fields] != phenotypes_2019.df[,identical_fields])
+
+# New fields in 2019 data
+colnames(phenotypes_2019.df)[! colnames(phenotypes_2019.df) %in% identical_fields]
+
+# Keep only 2019 phenotype data
+phenotypes.df <- phenotypes_2019.df
+
+# Clean-up
+rm(identical_fields, phenotypes_2018.df, phenotypes_2019.df)
+
+```
+
+# Update IDs in phenotypes, remove NFE  
+
+The initial phenotype table includes samples numbers (e.g. 40),  
+while the sequencing data include alpha-numerical IDs (e.g. 40_S189_L007)  
+
+This chunk adds alpha-numerical IDs and removes NFE in the phenotypes table  
+
+```{r update_phenotypes_ids_remove_NFE}
+
+# Get long samples names from the colnames of genotypes matrix
+dim(genotypes.mx)
+genotypes.mx[1:5,1:5]
+genotypes.mx[1:5,541:542]
+genotypes.mx[1:5,735:739]
+wecare_samples.df <- data.frame(long_ids=colnames(genotypes.mx)[1:541])
+
+# Split the long IDs for wecare samples
+wecare_samples.df <- separate(wecare_samples.df, "long_ids", c("num", "illumina_id", "illumina_lane"), 
+                              sep="_", remove=F) 
+wecare_samples.df$num <- as.integer(wecare_samples.df$num)
+dim(wecare_samples.df)
+str(wecare_samples.df)
+wecare_samples.df[1:5,]
+
+# Sort wecare_samples.df by sample num (to sync with phenotypes.df)
+wecare_samples.df <- wecare_samples.df[order(wecare_samples.df$num),]
+wecare_samples.df[1:5,]
+phenotypes.df[1:5,1:5]
+
+# Bind add long IDs to phenotypes table
+phenotypes.df <- cbind(wecare_samples.df, phenotypes.df)
+
+# Check that numbers are identical
+sum(phenotypes.df$num == phenotypes.df$Sample_num)
+sum(phenotypes.df$num != phenotypes.df$Sample_num)
+
+# Remove one of the numbers
+phenotypes.df <- phenotypes.df[,-2]
+dim(phenotypes.df)
+colnames(phenotypes.df)
+str(phenotypes.df)
+
+# Set rownames
+rownames(phenotypes.df) <- phenotypes.df$long_ids
+
+# Clean-up
+rm(wecare_samples.df)
+
+```
+
+# Sync all data with phenotypes
+
+```{r sync_data}
+
+wecare_samples <- rownames(phenotypes.df)
+
+genotypes.mx <- genotypes.mx[,wecare_samples]
+alt.mx <- alt.mx[,wecare_samples]
+ref.mx <- ref.mx[,wecare_samples]
+dp.mx <- dp.mx[,wecare_samples]
+gq.mx <- gq.mx[,wecare_samples]
+
+rm(wecare_samples)
+
+```
+
+# Keep only variants present in the remaining samples
+
+```{r update_variants}
+
+# Function to detect uniform vectors (expects vectors containing 0,1,2 or NA only)
+uniform.udf <- function(x){
+  if(all(is.na(x))) return(TRUE) # Return T if all are NA
+  min(x,na.rm=T)==max(x,na.rm=T)} # Return T if min=max, otherwise return F
+
+# Index of uniform variants
+uniform_variants <- apply(genotypes.mx, 1, uniform.udf)
+sum(uniform_variants)
+
+# Remove uniform variants
+genotypes.mx <- genotypes.mx[!uniform_variants,]
+variants.df <- variants.df[!uniform_variants,]
+alt.mx <- alt.mx[!uniform_variants,]
+ref.mx <- ref.mx[!uniform_variants,]
+dp.mx <- dp.mx[!uniform_variants,]
+gq.mx <- gq.mx[!uniform_variants,]
+
+# Clean-up
+rm(uniform_variants, uniform.udf)
+
+```
+
+# check data
+
+```{r end_check}
+
+dim(genotypes.mx)
+dim(phenotypes.df)
+dim(variants.df)
+
+dim(alt.mx)
+dim(ref.mx)
+dim(gq.mx)
+dim(dp.mx)
+
+sum(colnames(genotypes.mx) != rownames(phenotypes.df))
+sum(colnames(genotypes.mx) != colnames(alt.mx))
+sum(colnames(genotypes.mx) != colnames(ref.mx))
+sum(colnames(genotypes.mx) != colnames(gq.mx))
+sum(colnames(genotypes.mx) != colnames(dp.mx))
+
+sum(rownames(genotypes.mx) != rownames(variants.df))
+sum(rownames(genotypes.mx) != rownames(alt.mx))
+sum(rownames(genotypes.mx) != rownames(ref.mx))
+sum(rownames(genotypes.mx) != rownames(gq.mx))
+sum(rownames(genotypes.mx) != rownames(dp.mx))
+
+table(phenotypes.df$cc)
+
+```
+
+# save_results
+
+```{r save_results}
+
+save.image(paste(base_folder, "s01_read_data.RData", sep="/"))
+
+```
+
+# final_section
+
+```{r final_section}
+
+ls()
+sessionInfo()
+Sys.time()
+
+```
