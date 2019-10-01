@@ -1,0 +1,32 @@
+Making 3675 sites vcf file
+Tue  1 Oct 2019 11:08:07 BST
+
+--- Files ---
+
+header_file: /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s01_prepare_data_for_joined_PCA/data/s02_header.txt
+variants_file: /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s01_prepare_data_for_joined_PCA/data/s01_ampliseq_nfe_3675_vars.txt
+output_vcf: /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s01_prepare_data_for_joined_PCA/data/s03_3675_sites.vcf.gz
+
+--- Tools ---
+
+bcftools 1.9
+Using htslib 1.9
+Copyright (C) 2018 Genome Research Ltd.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+--- Progress ---
+
+Number of lines in the input variants file (excluding the line for header)
+3675
+
+Adding VCF header to variants ...
+Compressing and indexing ...
+
+Number of variants in the output VCF:
+    3675
+
+Done
+Tue  1 Oct 2019 11:08:07 BST
+

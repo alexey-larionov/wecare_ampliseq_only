@@ -1,0 +1,205 @@
+---
+title: "s02_explore_ethnicity_of_outliers"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+started: AL26Apr2019  
+last updated: AL01Oct2019  
+
+# Summary  
+
+Inputs:  
+
+- Input sequencing data: 3,675 vars x 515 samples (258UBC + 257CBC) with eigenvectors calculated using 468 non-rare variants not in LD  
+- Joined WECARE-KGEN eigenvectors: based on 622 variants x 3,019 samples (515 wecare + 2,504 kgp)  
+
+One clear ethinic outlier (133) has not been picked up by Ampliseq-only PCA (mean +/- 3SD).  
+
+So, this outlier has been added manually, basing on the joined plot with 1KGP,  
+expanding the total number of outliers from 33 to 34  
+
+# Start_section
+
+<style>
+pre {
+  overflow-x: auto;
+}
+pre code {
+  word-wrap: normal;
+  white-space: pre;
+}
+</style>
+
+```{r set_width, echo=F}
+
+#eval=F
+
+options(width = 999)
+# https://stackoverflow.com/questions/36845178/width-of-r-code-chunk-output-in-rmarkdown-files-knitr-ed-to-html
+
+```
+
+```{r start_section}
+
+Sys.time()
+rm(list=ls())
+graphics.off()
+
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+
+base_folder="/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s13_ampliseq_only_PCA/s03_explore_PCA_plots_exclude_outliers"
+
+opts_knit$set(root.dir = base_folder)
+
+options(stringsAsFactors = F)
+options(warnPartialMatchArgs = T, 
+        warnPartialMatchAttr = T, 
+        warnPartialMatchDollar = T)
+
+#options(error = browser()) # Type Q or c to exit, drop browser level
+# https://support.rstudio.com/hc/en-us/articles/200713843?version=1.1.456&mode=desktop
+# https://stackoverflow.com/questions/13052522/how-to-leave-the-r-browser-mode-in-the-console-window/13052588 
+
+```
+
+# Read_data  
+
+Read data for joined PCA on Ampliseq and 1KG  
+
+```{r read_data}
+
+load(paste(base_folder, "s01_add_PCs.RData", sep="/"))
+
+source_folder="/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s06_explore_joined_PCA_plots"
+load(paste(source_folder, "s01_joined_PCA_plots_622_3019_not_rare_not_in_LD.RData", sep="/"))
+base_folder="/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s13_ampliseq_only_PCA/s03_explore_PCA_plots_exclude_outliers"
+
+# Clean-up
+rm(source_folder)
+
+```
+
+# Check data
+
+```{r start_check}
+
+# List of objects
+ls()
+
+# Expected number of samples in eigenvectors
+2504+515
+dim(eigenphen_ampliseq_kgen.df)
+
+# Dimentions of objects
+dim(genotypes.mx)
+dim(variants.df)
+dim(phenotypes.df)
+
+```
+
+# Add ampliseq outliers to joined data
+
+```{r add_outliers}
+
+# Get IDs of the ampliseq-nfe-only outliers
+ampliseq_only_outliers <- phenotypes.df[phenotypes.df$pc_outlier,"long_ids"]
+length(ampliseq_only_outliers)
+
+# All ampliseq outliers are within the ethnic outliers detected in joined PCA
+sum(ampliseq_only_outliers %in% joined_outliers)
+setdiff(joined_outliers,ampliseq_only_outliers)
+
+# 133_S168_L007 is a clear ethnic outlier located toward EAS in joined PCA plot  
+
+# Add the column to data frame (for plotting)
+ampliseq_only_outliers <- eigenphen_ampliseq_kgen.df$sample %in% ampliseq_only_outliers
+eigenphen_ampliseq_kgen.df <- data.frame(eigenphen_ampliseq_kgen.df,ampliseq_only_outliers)
+sum(eigenphen_ampliseq_kgen.df$ampliseq_only_outliers)
+
+# Clean-up
+rm(ampliseq_nfe_only_outliers)
+
+```
+
+# Make PCA plot
+
+http://www.sthda.com/english/wiki/ggplot2-point-shapes  
+
+```{r ampliseq_kgen_plot}
+
+table(eigenphen_ampliseq_kgen.df$group)
+
+# Prepare vector fr colour scale
+myColours <- c("EUR"="BLUE", "AFR"="YELLOW", "AMR"="GREEN",
+               "SAS"="GREY", "EAS"="AQUAMARINE", 
+               "UBC"="SALMON", "CBC"="RED")
+
+myColourScale <- scale_colour_manual(values=myColours)
+
+# Static plot
+ggplot(eigenphen_ampliseq_kgen.df, aes(PC1,PC2)) + 
+  geom_point(aes(col=group, shape=ampliseq_only_outliers)) +
+  labs(title="PC1 vs PC2", x="PC1", y="PC2") +
+  scale_shape_manual(values=c(16,4)) +
+  geom_vline(xintercept=pc1_th, linetype="dashed", size=0.5) +
+  geom_hline(yintercept=pc2_th, linetype="dashed", size=0.5) +
+  myColourScale
+
+# Interactive plot
+plotly_group <- factor(eigenphen_ampliseq_kgen.df$group,
+  levels=c("AFR","AMR","EAS","SAS","EUR","UBC","CBC"))
+
+g <- ggplot(eigenphen_ampliseq_kgen.df, aes(PC1,PC2)) + 
+  geom_point(aes(col=plotly_group, shape=ampliseq_only_outliers, text=sample)) +
+  labs(title="PC1 vs PC2 (manual thresholds)", x="PC1", y="PC2") +
+  scale_shape_manual(values=c(16,4)) + 
+  geom_vline(xintercept=pc1_th, linetype="dashed", size=0.5) +
+  geom_hline(yintercept=pc2_th, linetype="dashed", size=0.5) +
+  myColourScale 
+
+ggplotly(g, tooltip="text") # By default the tooltip would also show coordinates 
+
+# Clean-up
+rm(myColours, myColourScale, plotly_group, g)
+
+```
+
+# Add manually selected outlier to phenotypes table  
+
+```{r manual_outliers}
+
+
+
+joined_pca_outlier <- phenotypes.df$long_ids %in% joined_outliers
+phenotypes.df <- data.frame(phenotypes.df, joined_pca_outlier)
+
+sum(phenotypes.df$pc_outlier)
+sum(phenotypes.df$joined_pca_outlier)
+
+rm(eigenphen_ampliseq_kgen.df, ampliseq_only_outliers, 
+   joined_outliers, joined_pca_outlier, pc1_th, pc2_th)
+
+```
+
+# Save results
+
+```{r save_results}
+
+save.image(paste(base_folder, "s02_explore_ethnicity_of_outliers.RData", sep="/"))
+
+```
+
+# Final_section
+
+```{r final_section}
+
+ls()
+sessionInfo()
+Sys.time()
+
+```

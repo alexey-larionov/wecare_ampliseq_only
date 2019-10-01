@@ -1,0 +1,11 @@
+Extracting header from source vcf
+
+source_vcf:
+/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s04_annotated_vcf/ampliseq_nfe.vcf
+
+header_file:
+/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s01_prepare_data_for_joined_PCA/data/s02_header.txt
+
+Done
+Tue  1 Oct 2019 10:55:47 BST
+

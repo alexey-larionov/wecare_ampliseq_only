@@ -1,0 +1,34 @@
+Select overlap between 3,675 ampliseq sites and ~84M 1kgp sites for joined PCA
+Tue  1 Oct 2019 11:12:46 BST
+
+--- Files and folders ---
+
+source_3675_vcf: /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s01_prepare_data_for_joined_PCA/data/s03_3675_sites.vcf.gz
+source_1kgp_vcf: /Users/alexey/Documents/resources/1kgp/ALL.wgs.phase3_shapeit2_mvncall_integrated_v5a.20130502.sites.fixed.filt.biallelic.vcf.gz
+target_vcf: /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s02_prepare_1kgp_genotypes/data/s01_1kgp_3675_intersect_sites.vcf.gz
+
+--- Tools ---
+
+bcftools 1.9
+Using htslib 1.9
+Copyright (C) 2018 Genome Research Ltd.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+--- Progress ---
+
+Number of variants in source_3675_vcf:
+3,675
+
+Number of variants in source_1kgp_vcf:
+84,354,814
+
+Looking for the intesect ...
+
+Number of variants in the intesect:
+2,095
+
+Done
+Tue  1 Oct 2019 11:19:15 BST
+

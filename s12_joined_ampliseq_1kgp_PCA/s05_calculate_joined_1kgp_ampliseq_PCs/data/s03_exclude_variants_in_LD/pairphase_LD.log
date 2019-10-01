@@ -1,0 +1,54 @@
+PLINK v1.90b6.10 64-bit (17 Jun 2019)
+Options in effect:
+  --allow-no-sex
+  --bfile /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s05_calculate_joined_1kgp_ampliseq_PCs/data/s02_exclude_rare_variants/ampliseq_1kgp_non_rare_902_3019
+  --indep-pairphase 50 5 0.5
+  --out /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s05_calculate_joined_1kgp_ampliseq_PCs/data/s03_exclude_variants_in_LD/pairphase_LD
+  --silent
+
+Hostname: mgpc101.medschl.private.cam.ac.uk
+Working directory: /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s05_calculate_joined_1kgp_ampliseq_PCs
+Start time: Tue Oct  1 15:10:59 2019
+
+Random number seed: 1569939059
+8192 MB RAM detected; reserving 4096 MB for main workspace.
+902 variants loaded from .bim file.
+3019 people (0 males, 0 females, 3019 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s05_calculate_joined_1kgp_ampliseq_PCs/data/s03_exclude_variants_in_LD/pairphase_LD.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3019 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999938.
+902 variants and 3019 people pass filters and QC.
+Note: No phenotypes present.
+Pruned 16 variants from chromosome 1, leaving 52.
+Pruned 9 variants from chromosome 2, leaving 65.
+Pruned 25 variants from chromosome 3, leaving 44.
+Pruned 27 variants from chromosome 4, leaving 41.
+Pruned 4 variants from chromosome 5, leaving 17.
+Pruned 5 variants from chromosome 6, leaving 18.
+Pruned 1 variant from chromosome 7, leaving 8.
+Pruned 18 variants from chromosome 8, leaving 41.
+Pruned 10 variants from chromosome 9, leaving 29.
+Pruned 10 variants from chromosome 10, leaving 30.
+Pruned 5 variants from chromosome 11, leaving 25.
+Pruned 9 variants from chromosome 12, leaving 34.
+Pruned 17 variants from chromosome 13, leaving 49.
+Pruned 0 variants from chromosome 14, leaving 6.
+Pruned 7 variants from chromosome 15, leaving 15.
+Pruned 47 variants from chromosome 16, leaving 52.
+Pruned 42 variants from chromosome 17, leaving 45.
+Pruned 10 variants from chromosome 18, leaving 7.
+Pruned 13 variants from chromosome 19, leaving 26.
+Pruned 3 variants from chromosome 21, leaving 4.
+Pruned 2 variants from chromosome 22, leaving 14.
+Pruning complete.  280 of 902 variants removed.
+Marker lists written to
+/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s05_calculate_joined_1kgp_ampliseq_PCs/data/s03_exclude_variants_in_LD/pairphase_LD.prune.in
+and
+/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s05_calculate_joined_1kgp_ampliseq_PCs/data/s03_exclude_variants_in_LD/pairphase_LD.prune.out
+.
+
+End time: Tue Oct  1 15:10:59 2019

@@ -1,0 +1,55 @@
+Select 1kgp genotypes for 2095 sites for joined PCA plot
+Tue  1 Oct 2019 11:25:54 BST
+
+--- Files and folders ---
+
+source_2095_vcf: /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s02_prepare_1kgp_genotypes/data/s01_1kgp_3675_intersect_sites.vcf.gz
+source_1kgp_folder: /Users/alexey/Documents/resources/1kgp
+target_folder: /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s12_joined_ampliseq_1kgp_PCA/s02_prepare_1kgp_genotypes/data/s02_by_chromosome
+
+--- Tools ---
+
+bcftools 1.9
+Using htslib 1.9
+Copyright (C) 2018 Genome Research Ltd.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+--- Progress ---
+
+List of chromosomes:
+chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16 chr17 chr18 chr19 chr20 chr21 chr22
+
+Looking for the genotypes ...
+Index and count ...
+chr1	     183
+chr2	     167
+chr3	     147
+chr4	     119
+chr5	      42
+chr6	      58
+chr7	      24
+chr8	     151
+chr9	      81
+chr10	      98
+chr11	      89
+chr12	      86
+chr13	     165
+chr14	      21
+chr15	      51
+chr16	     208
+chr17	     225
+chr18	      30
+chr19	      83
+chr20	       0
+chr21	      18
+chr22	      40
+
+Done all autosomes
+
+The total count of selected variants:
+2,086
+
+Tue  1 Oct 2019 13:09:27 BST
+

@@ -1,0 +1,34 @@
+PLINK v1.90b6.10 64-bit (17 Jun 2019)
+Options in effect:
+  --allow-no-sex
+  --bfile /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s13_ampliseq_only_PCA/s02_calculate_ampliseq_only_PCs/data/s03_exclude_variants_in_LD/ampliseq_only_non_rare_not_in_LD_468_515
+  --out /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s13_ampliseq_only_PCA/s02_calculate_ampliseq_only_PCs/data/s04_pca/ampliseq_only_468_515_100PCs
+  --pca 100 header tabs
+  --silent
+
+Hostname: mgpc101.medschl.private.cam.ac.uk
+Working directory: /Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s13_ampliseq_only_PCA/s02_calculate_ampliseq_only_PCs
+Start time: Tue Oct  1 18:26:43 2019
+
+Random number seed: 1569950803
+8192 MB RAM detected; reserving 4096 MB for main workspace.
+468 variants loaded from .bim file.
+515 people (0 males, 0 females, 515 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s13_ampliseq_only_PCA/s02_calculate_ampliseq_only_PCs/data/s04_pca/ampliseq_only_468_515_100PCs.nosex
+.
+Using up to 4 threads (change this with --threads).
+Before main variant filters, 515 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999506.
+468 variants and 515 people pass filters and QC.
+Note: No phenotypes present.
+Excluding 1 variant on non-autosomes from relationship matrix calc.
+Relationship matrix calculation complete.
+--pca: Results saved to
+/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s13_ampliseq_only_PCA/s02_calculate_ampliseq_only_PCs/data/s04_pca/ampliseq_only_468_515_100PCs.eigenval
+and
+/Users/alexey/Documents/wecare/ampliseq/v05_ampliseq_only/s13_ampliseq_only_PCA/s02_calculate_ampliseq_only_PCs/data/s04_pca/ampliseq_only_468_515_100PCs.eigenvec
+.
+
+End time: Tue Oct  1 18:26:43 2019
